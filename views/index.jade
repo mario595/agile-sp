@@ -1,19 +1,29 @@
 extends layout
 
 block body
-  div(ng-controller='AppCtrl')
-    h2 Hello {{name}}
-    ul.menu
-      li
-        a(href='view1') view1
-      li
-        a(href='view2') view2
-
-    div(ng-view)
-
-    div
-      | Angular Socket.io seed app: v
-      span(app-version)
+  div.container(ng-controller='AppCtrl')
+    div.row
+      div.col-sm-3
+        div.panel.panel-default
+          div.panel-heading
+            h3 Stories
+          ul.list-group
+            li.list-group-item
+              a First Item
+            li.list-group-item
+              a Second Item
+      div.col-sm-6
+        div.panel.panel-default
+          div.panel-heading
+            h3 Current Story
+          div.panel-body
+      div.col-sm-3
+        div.panel.panel-default
+          div.panel-heading
+            h3 Users
+          div.panel-body
+            ul(ng-repeat='user in users') 
+              li {{user}}
 
   script(src='/socket.io/socket.io.js')
   script(src='bower_components/angular/angular.js')
@@ -22,5 +32,5 @@ block body
   script(src='js/app.js')
   script(src='js/services.js')
   script(src='js/controllers.js')
-  script(src='js/filters.js')
-  script(src='js/directives.js')
+  script(src='https://code.jquery.com/jquery-2.1.1.min.js')
+  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js")

@@ -1,18 +1,26 @@
-'use strict';
+function AppCtrl($scope, socket) {
 
-/* Controllers */
+  // Socket listeners
+  // ================
 
-angular.module('myApp.controllers', []).
-  controller('AppCtrl', function ($scope, socket) {
-    socket.on('send:name', function (data) {
-      $scope.name = data.name;
-    });
-  }).
-  controller('MyCtrl1', function ($scope, socket) {
-    socket.on('send:time', function (data) {
-      $scope.time = data.time;
-    });
-  }).
-  controller('MyCtrl2', function ($scope) {
-    // write Ctrl here
+  socket.on('init', function (data) {
+    $scope.name = data.name;
+    $scope.users = data.users;
   });
+
+  socket.on('user:join', function (data) {
+    $scope.users.push(data.name);
+  });
+
+  // add a message to the conversation when a user disconnects or leaves the room
+  socket.on('user:left', function (data) {
+    var i, user;
+    for (i = 0; i < $scope.users.length; i++) {
+      user = $scope.users[i];
+      if (user === data.name) {
+        $scope.users.splice(i, 1);
+        break;
+      }
+    }
+  });
+}
