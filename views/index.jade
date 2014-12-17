@@ -24,6 +24,19 @@ block body
           div.panel-body
             ul(ng-repeat='user in users') 
               li {{user}}
+    div.row
+      div.col-sm-6.col-sm-offset-3
+        div.panel.panel-default
+          div.panel-body
+            form(role='form')
+              .form-group
+                input#new-name.form-control(type='text'
+                                  placeholder='new name')
+                input.btn.btn-default(type='submit'
+                                          value='Change name')
+
+            
+            
 
   script(src='/socket.io/socket.io.js')
   script(src='bower_components/angular/angular.js')
