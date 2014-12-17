@@ -1,14 +1,22 @@
 {
-  "name": "application-name",
-  "version": "0.0.0",
+  "name": "agile-sp",
+  "version": "0.0.1",
   "ignore": [
     "**/.*",
     "node_modules",
-    "components"
+    "components",
+    "bower_components",
+    "public/bower_components",
+    "test",
+    "tests"
   ],
   "dependencies": {
-    "angular": "~1.2.14",
-    "angular-socket-io": "~0.3.0",
-    "angular-route": "~1.2.14"
-  }
+    "bootstrap": "~3.3.1",
+    "jquery": "~2.1.1"
+  },
+  "authors": [
+    "mario595 <mariomartinez595@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": true
 }
