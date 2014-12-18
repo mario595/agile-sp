@@ -30,11 +30,16 @@ block body
         div(role='tabpanel')
           ul.nav.nav-tabs(role='tablist')
             li.active(role='presentation')
-              a(href='#change-name', aria-controls='change-name', role='tab', data-toggle='tab') Change Name     
-            li(role='presentation')
               a(href='#messages', aria-controls='messages', role='tab', data-toggle='tab') Messages
+            li(role='presentation')
+              a(href='#change-name', aria-controls='change-name', role='tab', data-toggle='tab') Change Name
           .tab-content
-            #change-name.tab-pane.active(role='tabpanel')
+            #messages.tab-pane.active(role='tabpanel')
+              div
+                h3 Messages
+                .overflowable
+                  p(ng-repeat='message in messages'){{message.user}} says: {{message.text}}
+            #change-name.tab-pane(role='tabpanel')
               div
                 h3 Change your name
                 form(role='form'
@@ -45,11 +50,6 @@ block body
                                       ng-model='newName')
                     input.btn.btn-default(type='submit'
                                           value='Change name')
-            #messages.tab-pane(role='tabpanel')
-              div
-                h3 Messages
-                .overflowable
-                  p(ng-repeat='message in messages'){{message.user}} says: {{message.text}}
 
             
             
