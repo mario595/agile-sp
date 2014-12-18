@@ -28,3 +28,13 @@
   content: "";
   padding: 0;
 }
+
+.overflowable {
+  height: 240px;
+  overflow-y: auto;
+  border: 1px solid #000;
+}
+
+.overflowable p {
+  margin: 0;
+}

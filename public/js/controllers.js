@@ -9,6 +9,10 @@ function AppCtrl($scope, socket) {
   });
 
   socket.on('user:join', function (data) {
+    $scope.messages.push({
+      user: 'log',
+      text: 'User ' + data.name + ' has joined.'
+    });
     $scope.users.push(data.name);
   });
 
@@ -43,7 +47,7 @@ function AppCtrl($scope, socket) {
 
 // Methods published to the scope
   // ==============================
-
+  $scope.messages = [];
   $scope.changeName = function () {
     socket.emit('change:name', {
       name: $scope.newName

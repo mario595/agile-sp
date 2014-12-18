@@ -63,6 +63,14 @@ module.exports = function (socket) {
     name: name
   });
 
+  // broadcast a user's message to other users
+  socket.on('send:message', function (data) {
+    socket.broadcast.emit('send:message', {
+      user: name,
+      text: data.message
+    });
+  });
+
   // validate a user's name change, and broadcast it on success
   socket.on('change:name', function (data, fn) {
     if (userNames.claim(data.name)) {
