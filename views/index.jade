@@ -22,8 +22,9 @@ block body
           div.panel-heading
             h3 Users
           div.panel-body
-            ul(ng-repeat='user in users') 
-              li {{user}}
+            .overflowable
+              p(ng-repeat='user in users'){{user}}
+              
     div.row
       div.col-sm-6.col-sm-offset-3
         div(role='tabpanel')
