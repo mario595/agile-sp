@@ -28,12 +28,14 @@ block body
       div.col-sm-6.col-sm-offset-3
         div.panel.panel-default
           div.panel-body
-            form(role='form')
+            form(role='form'
+                  ng-submit='changeName()')
               .form-group
                 input#new-name.form-control(type='text'
-                                  placeholder='new name')
+                                  placeholder='new name'
+                                  ng-model='newName')
                 input.btn.btn-default(type='submit'
-                                          value='Change name')
+                                      value='Change name')
 
             
             
