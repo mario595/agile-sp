@@ -6,6 +6,7 @@ function AppCtrl($scope, socket) {
   socket.on('init', function (data) {
     $scope.name = data.name;
     $scope.users = data.users;
+    $scope.stories = data.stories;
   });
 
   socket.on('user:join', function (data) {
@@ -18,6 +19,13 @@ function AppCtrl($scope, socket) {
 
   socket.on('change:name', function (data) {
     changeName(data.oldName, data.newName);
+  });
+
+  socket.on('create:story', function (data) {
+    $scope.stories.push({
+      id: data.id,
+      name: data.name
+    });
   });
 
   // add a message to the conversation when a user disconnects or leaves the room
@@ -52,6 +60,7 @@ function AppCtrl($scope, socket) {
 // Methods published to the scope
   // ==============================
   $scope.messages = [];
+  $scope.stories = [];
   $scope.changeName = function () {
     socket.emit('change:name', {
       name: $scope.newName
@@ -66,6 +75,18 @@ function AppCtrl($scope, socket) {
         $scope.newName = '';
       }
     });
+  };
+
+  $scope.createStory = function() {
+    socket.emit('create:story', {
+      name : $scope.newStoryName
+    }, function(newStory){
+        $scope.stories.push({
+        id: newStory.id,
+        name: newStory.name
+      });
+    });
+    $scope.newStoryName = '';
   };
 
 

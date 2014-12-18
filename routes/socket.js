@@ -48,19 +48,66 @@ var userNames = (function () {
   };
 }());
 
+
+//Stories
+var stories = (function() {
+  var stories = [];
+  var lastIndex = 0;
+
+  var create = function(name){
+    var story = {};
+    story.name = name;
+    story.id = lastIndex++;
+    stories[story.id] = story;
+    return story;
+  };
+
+  var get = function() {
+    var res = [];
+    
+    var length = stories.length;
+    for(var i=0; i<length; i++) {
+    	res.push({
+            id: stories[i].id,
+            name: stories[i].name
+          });
+    }
+    return res;
+  };
+
+  return {
+    create: create,
+    get: get
+  };
+}());
+
 // export function for listening to the socket
 module.exports = function (socket) {
   var name = userNames.getGuestName();
 
-  // send the new user their name and a list of users
+  // send the new user their name and a list of users and stories
   socket.emit('init', {
     name: name,
-    users: userNames.get()
+    users: userNames.get(),
+    stories: stories.get()
   });
 
   // notify other clients that a new user has joined
   socket.broadcast.emit('user:join', {
     name: name
+  });
+
+  //TODO: notify story creation
+
+  //Story creation
+  socket.on('create:story', function (data, fn){
+    var story = stories.create(data.name);
+    //Notify all that a new story has been created
+    socket.broadcast.emit('create:story', {
+      id:story.id,
+      name: story.name
+    });
+    fn(story);
   });
 
   // broadcast a user's message to other users
