@@ -43,6 +43,10 @@ function AppCtrl($scope, socket) {
         $scope.users[i] = newName;
       }
     }
+    $scope.messages.push({
+      user: 'log',
+      text: 'User ' + oldName + ' is now known as ' + newName + '.'
+    });
   }
 
 // Methods published to the scope
