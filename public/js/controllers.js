@@ -40,6 +40,26 @@ function AppCtrl($scope, socket) {
     }
   });
 
+  socket.on('open:story', function(data){
+    var result = $scope.stories.filter(function(obj){
+      return obj.id==data.id;
+    });
+    if (result.length > 0) {
+      result[0]['open'] = true;
+      $scope.selectedStory = result[0];
+    }
+  });
+
+  socket.on('close:story', function(data){
+    var result = $scope.stories.filter(function(obj){
+      return obj.open;
+    });
+    if (result.length > 0) {
+      result[0]['open'] = false;
+    }
+
+  });
+
   // Private helpers
   // ===============
 
@@ -63,6 +83,7 @@ function AppCtrl($scope, socket) {
   $scope.messages = [];
   $scope.stories = [];
   $scope.selectedStory;
+  $scope.possibleValues = [1,2,3,5,8,13,20]
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');

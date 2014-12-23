@@ -1,4 +1,4 @@
 'use strict';
 
 // Declare app level module which depends on filters, and services
-var app = angular.module('agileSp', []);
+var app = angular.module('agileSp', ['ui.bootstrap']);

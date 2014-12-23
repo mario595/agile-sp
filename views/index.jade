@@ -31,6 +31,13 @@ block body
                       class='btn btn-danger',
                       ng-click='closeStory()'
                       ng-show='selectedStory.open') Close
+              div(ng-show='selectedStory.open')
+                h4 Vote!
+                .btn-group
+                  label.btn.btn-success(ng-repeat='value in possibleValues'
+                                        ng-model='vote'
+                                        btn-radio="'value_{{value}}'"
+                                        uncheckable) {{value}}
       div.col-sm-3
         div.panel.panel-default
           div.panel-heading
@@ -92,3 +99,6 @@ block body
   script(src='js/controllers.js')
   script(src='bower_components/jquery/dist/jquery.min.js')
   script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+
+  script(src='bower_components/angular-bootstrap/ui-bootstrap.min.js')
+  script(src='bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js')
