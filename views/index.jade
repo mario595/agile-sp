@@ -7,9 +7,12 @@ block body
         div.panel.panel-default
           div.panel-heading
             h3 Stories
-          ul.list-group(ng-repeat='story in stories')
-            li.list-group-item
+          ul.nav.nav-pills.nav-stacked(ng-repeat='story in stories')
+            li(role='presentation')
               a {{story.name}}
+          ul.nav.nav-pills.nav-stacked
+            li
+              a(ng-click='showNewStoryTab()') <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Add Story
       div.col-sm-6
         div.panel.panel-default
           div.panel-heading
@@ -26,10 +29,10 @@ block body
     div.row
       div.col-sm-6.col-sm-offset-3
         div(role='tabpanel')
-          ul.nav.nav-tabs(role='tablist')
+          ul#tabs.nav.nav-tabs(role='tablist')
             li.active(role='presentation')
               a(href='#messages', aria-controls='messages', role='tab', data-toggle='tab') Messages
-            li(role='presentation')
+            li#create-story-tab(role='presentation')
               a(href='#create-story', aria-controls='create-story', role='tab', data-toggle='tab') Story
             li(role='presentation')
               a(href='#change-name', aria-controls='change-name', role='tab', data-toggle='tab') Change Name

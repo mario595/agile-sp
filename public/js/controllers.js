@@ -59,8 +59,14 @@ function AppCtrl($scope, socket) {
 
 // Methods published to the scope
   // ==============================
+  //Initialize scope
   $scope.messages = [];
   $scope.stories = [];
+
+  $scope.showNewStoryTab = function () {
+    $('#tabs a[href="#create-story"]').tab('show');
+  };
+
   $scope.changeName = function () {
     socket.emit('change:name', {
       name: $scope.newName
