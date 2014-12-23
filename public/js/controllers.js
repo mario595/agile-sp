@@ -62,6 +62,7 @@ function AppCtrl($scope, socket) {
   //Initialize scope
   $scope.messages = [];
   $scope.stories = [];
+  $scope.selectedStory;
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -83,6 +84,10 @@ function AppCtrl($scope, socket) {
     });
   };
 
+  $scope.showCurrentStory = function() {
+    return $scope.selectedStory !==undefined;
+  };
+
   $scope.createStory = function() {
     socket.emit('create:story', {
       name : $scope.newStoryName
@@ -93,6 +98,25 @@ function AppCtrl($scope, socket) {
       });
     });
     $scope.newStoryName = '';
+  };
+
+  $scope.selectStory = function(story) {
+    $scope.selectedStory = story;
+  }
+
+  $scope.openStory = function() {
+    socket.emit('open:story', {
+      id:$scope.selectedStory.id
+    }, function (success) {
+      if(success) {
+        $scope.selectedStory['open'] = true;  
+      }
+    });
+  };
+
+  $scope.closeStory = function() {
+    socket.emit('close:story');
+    $scope.selectedStory['open'] = false;
   };
 
 

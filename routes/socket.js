@@ -54,13 +54,25 @@ var stories = (function() {
   var stories = [];
   var lastIndex = 0;
 
-  var create = function(name){
+  var openedStoryIndex = -1;
+
+  var create = function(name) {
     var story = {};
     story.name = name;
     story.id = lastIndex++;
     stories[story.id] = story;
     return story;
   };
+
+  var open = function(id) {
+    if (id < lastIndex) {
+      openedStoryIndex = id;
+    }
+  }
+
+  var close = function() {
+    openedStoryIndex = -1;
+  }
 
   var get = function() {
     var res = [];
@@ -77,7 +89,9 @@ var stories = (function() {
 
   return {
     create: create,
-    get: get
+    get: get,
+    open: open,
+    close: close
   };
 }());
 
@@ -97,8 +111,6 @@ module.exports = function (socket) {
     name: name
   });
 
-  //TODO: notify story creation
-
   //Story creation
   socket.on('create:story', function (data, fn){
     var story = stories.create(data.name);
@@ -108,6 +120,23 @@ module.exports = function (socket) {
       name: story.name
     });
     fn(story);
+  });
+
+  //Story Open
+  socket.on('open:story', function (data, fn){
+    stories.open(data.id);
+    //Notify that the story has been opened
+    socket.broadcast.emit('open:story', {
+      id:data.id
+    });
+    fn(true);
+  });
+
+  //Story Close
+  socket.on('close:story', function(data){
+    stories.close();
+    //Notify that the story has been closed
+    socket.broadcast.emit('close:story');
   });
 
   // broadcast a user's message to other users

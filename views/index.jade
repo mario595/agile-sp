@@ -8,8 +8,9 @@ block body
           div.panel-heading
             h3 Stories
           ul.nav.nav-pills.nav-stacked(ng-repeat='story in stories')
-            li(role='presentation')
-              a {{story.name}}
+            li(role='presentation'
+               ng-class='{active: story.id == selectedStory.id}')
+              a(ng-click='selectStory(story)') {{story.name}}
           ul.nav.nav-pills.nav-stacked
             li
               a(ng-click='showNewStoryTab()') <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Add Story
@@ -18,6 +19,18 @@ block body
           div.panel-heading
             h3 Current Story
           div.panel-body
+            div(ng-show='selectedStory')
+              h4 {{selectedStory.name}}
+              button(type='button'
+                      id='open-story-button',
+                      class='btn btn-success',
+                      ng-click='openStory()'
+                      ng-show='!selectedStory.open') Open
+              button(type='button'
+                      id='open-story-button',
+                      class='btn btn-danger',
+                      ng-click='closeStory()'
+                      ng-show='selectedStory.open') Close
       div.col-sm-3
         div.panel.panel-default
           div.panel-heading
