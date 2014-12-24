@@ -2,6 +2,9 @@ extends layout
 
 block body
   div.container(ng-controller='AppCtrl')
+    alert(ng-repeat="alert in alerts"
+          type="{{alert.type}}"
+          close="closeAlert($index)") {{alert.msg}}
     div.row
       div.col-sm-3
         div.panel.panel-default

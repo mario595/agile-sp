@@ -99,6 +99,7 @@ function AppCtrl($scope, socket) {
   $scope.stories = [];
   $scope.selectedStory;
   $scope.valueOptions = [0,1,2,3,5,8,13,20]
+  $scope.alerts = []
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -138,13 +139,22 @@ function AppCtrl($scope, socket) {
   }
 
   $scope.openStory = function() {
-    socket.emit('open:story', {
-      id:$scope.selectedStory.id
-    }, function (success) {
-      if(success) {
-        $scope.selectedStory['open'] = true;  
-      }
+    //Check if there is already a opened story
+    var result = $scope.stories.filter(function(obj){
+      return obj.open;
     });
+    if(result.length==0) {
+      //Notify open story to server
+      socket.emit('open:story', {
+        id:$scope.selectedStory.id
+      }, function (success) {
+        if(success) {
+          $scope.selectedStory['open'] = true;  
+        }
+      });
+    } else {
+      $scope.alerts.push({type:'danger', msg: 'You cannot open more than one story!'});
+    }
   };
 
   $scope.closeStory = function() {
@@ -170,5 +180,8 @@ function AppCtrl($scope, socket) {
     }
   };
 
+  $scope.closeAlert = function(index) {
+    $scope.alerts.splice(index, 1);
+  };
 
 }
