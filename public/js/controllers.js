@@ -12,9 +12,9 @@ function AppCtrl($scope, socket) {
   socket.on('user:join', function (data) {
     $scope.messages.push({
       user: 'log',
-      text: 'User ' + data.name + ' has joined.'
+      text: 'User ' + data.user.name + ' has joined.'
     });
-    $scope.users.push(data.name);
+    $scope.users.push(data.user);
   });
 
   socket.on('change:name', function (data) {
@@ -30,7 +30,7 @@ function AppCtrl($scope, socket) {
     var i, user;
     for (i = 0; i < $scope.users.length; i++) {
       user = $scope.users[i];
-      if (user === data.name) {
+      if (user.id === data.id) {
         $scope.users.splice(i, 1);
         break;
       }
@@ -53,6 +53,8 @@ function AppCtrl($scope, socket) {
     });
 
     if (result.length > 0) {
+      //Save my vote
+      result[0].votes.push($scope.myVote);
       //Send vote
       socket.emit('vote:story', {
         storyId: result[0].id,
@@ -126,10 +128,7 @@ function AppCtrl($scope, socket) {
     socket.emit('create:story', {
       name : $scope.newStoryName
     }, function(newStory){
-        $scope.stories.push({
-        id: newStory.id,
-        name: newStory.name
-      });
+        $scope.stories.push(newStory);
     });
     $scope.newStoryName = '';
   };
@@ -149,9 +148,26 @@ function AppCtrl($scope, socket) {
   };
 
   $scope.closeStory = function() {
-    $scope.selectedStory.votes.push($scope.myVote);
-    socket.emit('close:story');
-    $scope.selectedStory['open'] = false;
+    //Search open story
+    var result = $scope.stories.filter(function(obj){
+      return obj.open;
+    });
+    if(result.length > 0) {
+      var storyToClose = result[0];
+      //Save my vote
+      storyToClose.votes.push($scope.myVote);
+      //Notify close story to server
+      socket.emit('close:story',{
+        storyId: storyToClose.id
+      });
+      //Close local story
+      storyToClose.open = false;
+      //Send my vote
+      socket.emit('vote:story', {
+        storyId: storyToClose.id,
+        vote: $scope.myVote
+      });
+    }
   };
 
 
