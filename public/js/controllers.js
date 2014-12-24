@@ -22,10 +22,7 @@ function AppCtrl($scope, socket) {
   });
 
   socket.on('create:story', function (data) {
-    $scope.stories.push({
-      id: data.id,
-      name: data.name
-    });
+    $scope.stories.push(data);
   });
 
   // add a message to the conversation when a user disconnects or leaves the room
@@ -54,10 +51,26 @@ function AppCtrl($scope, socket) {
     var result = $scope.stories.filter(function(obj){
       return obj.open;
     });
+
     if (result.length > 0) {
+      //Send vote
+      socket.emit('vote:story', {
+        storyId: result[0].id,
+        vote: $scope.myVote
+      });
+      //Close Story
       result[0]['open'] = false;
     }
+  });
 
+  socket.on('vote:story', function(data) {
+    var result = $scope.stories.filter(function(obj){
+      return obj.id==data.storyId;
+    });
+
+    if(result.length > 0) {
+      result[0].votes.push(data.vote);
+    }
   });
 
   // Private helpers
@@ -83,7 +96,7 @@ function AppCtrl($scope, socket) {
   $scope.messages = [];
   $scope.stories = [];
   $scope.selectedStory;
-  $scope.possibleValues = [1,2,3,5,8,13,20]
+  $scope.valueOptions = [0,1,2,3,5,8,13,20]
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -136,6 +149,7 @@ function AppCtrl($scope, socket) {
   };
 
   $scope.closeStory = function() {
+    $scope.selectedStory.votes.push($scope.myVote);
     socket.emit('close:story');
     $scope.selectedStory['open'] = false;
   };

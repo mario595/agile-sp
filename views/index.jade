@@ -21,6 +21,8 @@ block body
           div.panel-body
             div(ng-show='selectedStory')
               h4 {{selectedStory.name}}
+              ul
+                li(ng-repeat='vote in selectedStory.votes track by $index') {{vote}}
               button(type='button'
                       id='open-story-button',
                       class='btn btn-success',
@@ -33,11 +35,12 @@ block body
                       ng-show='selectedStory.open') Close
               div(ng-show='selectedStory.open')
                 h4 Vote!
+                p {{myVote ? "I think it should be "+myVote : "How many s.p do you think it should be?"}}
                 .btn-group
-                  label.btn.btn-success(ng-repeat='value in possibleValues'
-                                        ng-model='vote'
-                                        btn-radio="'value_{{value}}'"
-                                        uncheckable) {{value}}
+                  label.btn.btn-success(  ng-repeat='option in valueOptions'
+                                          ng-model='$parent.myVote'
+                                          btn-radio="'{{option}}'"
+                                          uncheckable) {{option}}
       div.col-sm-3
         div.panel.panel-default
           div.panel-heading

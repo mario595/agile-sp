@@ -60,6 +60,7 @@ var stories = (function() {
     var story = {};
     story.name = name;
     story.id = lastIndex++;
+    story.votes = [];
     stories[story.id] = story;
     return story;
   };
@@ -68,23 +69,14 @@ var stories = (function() {
     if (id < lastIndex) {
       openedStoryIndex = id;
     }
-  }
+  };
 
   var close = function() {
     openedStoryIndex = -1;
-  }
+  };
 
   var get = function() {
-    var res = [];
-    
-    var length = stories.length;
-    for(var i=0; i<length; i++) {
-    	res.push({
-            id: stories[i].id,
-            name: stories[i].name
-          });
-    }
-    return res;
+    return stories;
   };
 
   return {
@@ -115,10 +107,7 @@ module.exports = function (socket) {
   socket.on('create:story', function (data, fn){
     var story = stories.create(data.name);
     //Notify all that a new story has been created
-    socket.broadcast.emit('create:story', {
-      id:story.id,
-      name: story.name
-    });
+    socket.broadcast.emit('create:story', story);
     fn(story);
   });
 
@@ -137,6 +126,20 @@ module.exports = function (socket) {
     stories.close();
     //Notify that the story has been closed
     socket.broadcast.emit('close:story');
+  });
+
+  //Story vote
+  socket.on('vote:story', function(data){
+      var result = stories.get().filter(function(obj){
+        return obj.id==data.storyId;
+      });
+      if (result.length > 0) {
+        result[0].votes.push(data.vote);
+        socket.broadcast.emit('vote:story', {
+          storyId: data.storyId,
+          vote: data.vote
+        });
+      }
   });
 
   // broadcast a user's message to other users
