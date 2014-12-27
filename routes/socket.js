@@ -86,7 +86,7 @@ module.exports = function (socket) {
 
   // send the new user their name and a list of users and stories
   socket.emit('init', {
-    name: user.name,
+    user: user,
     users: users.getAll(),
     stories: stories.get()
   });

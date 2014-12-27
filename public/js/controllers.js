@@ -4,7 +4,7 @@ function AppCtrl($scope, socket) {
   // ================
 
   socket.on('init', function (data) {
-    $scope.name = data.name;
+    $scope.currentUser = data.user;
     $scope.users = data.users;
     $scope.stories = data.stories;
   });
