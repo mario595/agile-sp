@@ -16,11 +16,22 @@ var users = (function() {
   };
 
   var free = function(id) {
-    for(var i = users.length - 1; i >= 0; i--) {
-      if(users[i].id===id) {
+    var newAdminId = -1;
+    for (var i = users.length - 1; i >= 0; i--) {
+      if (users[i].id==id) {
+        //check if we need a new admin
+        newAdmin = users[i].isAdmin && users.length > 1
+        //remove
         users.splice(i, 1);
+        //make new admin to the new first user
+        if (newAdmin) {
+          users[0].isAdmin = true;
+          newAdminId = users[0].id;
+        }
+        break;
       }
     }
+    return newAdminId;
   };
 
   return {
@@ -140,9 +151,10 @@ module.exports = function (socket) {
 
   // clean up when a user leaves, and broadcast it to other users
   socket.on('disconnect', function () {
+    var newAdminId = users.free(user.id);
     socket.broadcast.emit('user:left', {
-      id: user.id
+      id: user.id,
+      newAdminId: newAdminId
     });
-    users.free(user.id);
   });
 };

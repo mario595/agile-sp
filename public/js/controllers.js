@@ -28,6 +28,7 @@ function AppCtrl($scope, socket) {
   // add a message to the conversation when a user disconnects or leaves the room
   socket.on('user:left', function (data) {
     var i, user;
+    //Find the user that left and remove from the scope
     for (i = 0; i < $scope.users.length; i++) {
       user = $scope.users[i];
       if (user.id === data.id) {
@@ -35,6 +36,16 @@ function AppCtrl($scope, socket) {
         break;
       }
     }
+    //check if we have a new admin
+    if (data.newAdminId > -1) {
+      var result = $scope.users.filter(function(obj){
+        return obj.id == data.newAdminId;
+      });
+      if (result.length > 0) {
+        result[0].isAdmin = true;
+      }
+    }
+
   });
 
   socket.on('open:story', function(data){
