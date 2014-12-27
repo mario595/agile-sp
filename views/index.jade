@@ -50,7 +50,8 @@ block body
             h3 Users
           div.panel-body
             .overflowable
-              p(ng-repeat='user in users'){{user.name}}
+              p(ng-repeat='user in users'
+                        ng-class='{strong: user.isAdmin}'){{user.name}}
               
     div.row
       div.col-sm-6.col-sm-offset-3

@@ -38,3 +38,7 @@
 .overflowable p {
   margin: 0;
 }
+
+.strong {
+  font-weight: 700;
+}

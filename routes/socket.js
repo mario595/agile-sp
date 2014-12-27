@@ -6,7 +6,7 @@ var users = (function() {
     var user = {};
     user.id = nextId++;
     user.name = 'Guest_'+user.id;
-    user.isAdmin = false;
+    user.isAdmin = users.length == 0 ? true : false;
     users.push(user);
     return user;
   };
