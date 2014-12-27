@@ -26,7 +26,7 @@ block body
               h4 {{selectedStory.name}}
               ul
                 li(ng-repeat='vote in selectedStory.votes track by $index') {{vote}}
-              div(ng-show='currentUser.isAdmin')
+              div(ng-show='currentUser().isAdmin')
                 button(type='button'
                         id='open-story-button',
                         class='btn btn-success',

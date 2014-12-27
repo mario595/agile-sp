@@ -4,7 +4,7 @@ function AppCtrl($scope, socket) {
   // ================
 
   socket.on('init', function (data) {
-    $scope.currentUser = data.user;
+    $scope.currentUserId = data.user.id;
     $scope.users = data.users;
     $scope.stories = data.stories;
   });
@@ -18,7 +18,7 @@ function AppCtrl($scope, socket) {
   });
 
   socket.on('change:name', function (data) {
-    changeName(data.oldName, data.newName);
+    changeName(data.id, data.newName);
   });
 
   socket.on('create:story', function (data) {
@@ -89,12 +89,12 @@ function AppCtrl($scope, socket) {
   // Private helpers
   // ===============
 
-  var changeName = function (oldName, newName) {
+  var changeName = function (id, newName) {
     // rename user in list of users
     var i;
     for (i = 0; i < $scope.users.length; i++) {
-      if ($scope.users[i] === oldName) {
-        $scope.users[i] = newName;
+      if ($scope.users[i].id === id) {
+        $scope.users[i].name = newName;
       }
     }
     $scope.messages.push({
@@ -109,6 +109,7 @@ function AppCtrl($scope, socket) {
   $scope.messages = [];
   $scope.stories = [];
   $scope.selectedStory;
+  $scope.currentUserId = -1;
   $scope.valueOptions = [0,1,2,3,5,8,13,20]
   $scope.alerts = []
 
@@ -117,6 +118,14 @@ function AppCtrl($scope, socket) {
   };
 
   $scope.changeName = function () {
+    //Change name
+    var result = $scope.users.filter(function(obj){
+      return obj.id == $scope.currentUserId;
+    });
+    if (result.length > 0) {
+      result[0].name = $scope.newName;
+    }
+    //Notify server name change
     socket.emit('change:name', {
       name: $scope.newName
     }, function (result) {
@@ -165,6 +174,15 @@ function AppCtrl($scope, socket) {
       });
     } else {
       $scope.alerts.push({type:'danger', msg: 'You cannot open more than one story!'});
+    }
+  };
+
+  $scope.currentUser = function() {
+    var result = $scope.users.filter(function(obj){
+      return obj.id == $scope.currentUserId;
+    });
+    if (result.length > 0) {
+      return result[0];
     }
   };
 

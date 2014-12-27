@@ -146,6 +146,12 @@ module.exports = function (socket) {
   // validate a user's name change, and broadcast it on success
   socket.on('change:name', function (data, fn) {
     user.name = data.name;
+    socket.broadcast.emit('change:name', {
+      id: user.id,
+      newName: user.name
+      });
+
+
     fn(true);
   });
 
