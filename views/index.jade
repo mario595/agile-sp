@@ -14,7 +14,7 @@ block body
             li(role='presentation'
                ng-class='{active: story.id == selectedStory.id}')
               a(ng-click='selectStory(story)') {{story.name}}
-          ul.nav.nav-pills.nav-stacked
+          ul.nav.nav-pills.nav-stacked(ng-show='currentUser().isAdmin')
             li
               a(ng-click='showNewStoryTab()') <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Add Story
       div.col-sm-6
