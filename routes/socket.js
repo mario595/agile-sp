@@ -53,7 +53,7 @@ var stories = (function() {
     var story = {};
     story.name = name;
     story.id = lastIndex++;
-    story.votes = [];
+    story.polls = [];
     stories[story.id] = story;
     return story;
   };
@@ -61,6 +61,8 @@ var stories = (function() {
   var open = function(id) {
     if (id < lastIndex) {
       openedStoryIndex = id;
+      //Initialize new poll
+      stories[openedStoryIndex].polls.push({results: []});
     }
   };
 
@@ -127,7 +129,9 @@ module.exports = function (socket) {
         return obj.id==data.storyId;
       });
       if (result.length > 0) {
-        result[0].votes.push(data.vote);
+        var story = result[0];
+        var lastPollIndex = story.polls.length - 1;
+        story.polls[lastPollIndex].results.push(data.vote);
         socket.broadcast.emit('vote:story', {
           storyId: data.storyId,
           vote: data.vote

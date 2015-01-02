@@ -54,6 +54,8 @@ function AppCtrl($scope, socket) {
     });
     if (result.length > 0) {
       result[0]['open'] = true;
+      result[0].polls.push({results: []});
+      //Show the opened story
       $scope.selectedStory = result[0];
     }
   });
@@ -64,15 +66,17 @@ function AppCtrl($scope, socket) {
     });
 
     if (result.length > 0) {
+      var story = result[0];
       //Save my vote
-      result[0].votes.push($scope.myVote);
+      var lastPollIndex = story.polls.length - 1;
+      story.polls[lastPollIndex].results.push($scope.myVote);
       //Send vote
       socket.emit('vote:story', {
-        storyId: result[0].id,
+        storyId: story.id,
         vote: $scope.myVote
       });
       //Close Story
-      result[0]['open'] = false;
+      story['open'] = false;
     }
   });
 
@@ -82,7 +86,9 @@ function AppCtrl($scope, socket) {
     });
 
     if(result.length > 0) {
-      result[0].votes.push(data.vote);
+      var story = result[0]
+      var lastPollIndex = story.polls.length - 1;
+      story.polls[lastPollIndex].results.push(data.vote);
     }
   });
 
@@ -112,6 +118,7 @@ function AppCtrl($scope, socket) {
   $scope.currentUserId = -1;
   $scope.valueOptions = [0,1,2,3,5,8,13,20]
   $scope.alerts = []
+  $scope.users = []
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -169,6 +176,7 @@ function AppCtrl($scope, socket) {
         id:$scope.selectedStory.id
       }, function (success) {
         if(success) {
+          $scope.selectedStory.polls.push({results: []});
           $scope.selectedStory['open'] = true;  
         }
       });
@@ -194,8 +202,9 @@ function AppCtrl($scope, socket) {
     if(result.length > 0) {
       var storyToClose = result[0];
       //Save my vote
-      storyToClose.votes.push($scope.myVote);
-      //Notify close story to server
+      var lastPollIndex = storyToClose.polls.length - 1;
+      storyToClose.polls[lastPollIndex].results.push($scope.myVote);
+      //Notify close story to server (TODO include on this calling my vote0)
       socket.emit('close:story',{
         storyId: storyToClose.id
       });
