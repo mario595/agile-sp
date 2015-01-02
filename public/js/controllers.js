@@ -149,6 +149,7 @@ function AppCtrl($scope, socket) {
         $scope.newName = '';
       }
     });
+    $scope.showChangeNameForm = false;
   };
 
   $scope.showCurrentStory = function() {

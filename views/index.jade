@@ -69,38 +69,31 @@ block body
           div.panel-heading
             h3 Users
           div.panel-body
+            p
+            | Your name is 
+            a(ng-click='showChangeNameForm=true') {{currentUser().name}}
+            form(role='form'
+                ng-submit='changeName()'
+                ng-show='showChangeNameForm')
+              .form-group
+                input#new-name.form-control(type='text'
+                                  placeholder='new name'
+                                  ng-model='newName')
+                input.btn.btn-success(type='submit'
+                                      value='Change name')
+                input.btn.btn-danger(type='button'
+                                    value='Cancel'
+                                    ng-click='showChangeNameForm=false')
             .overflowable
               p(ng-repeat='user in users'
                         ng-class='{strong: user.isAdmin}'){{user.name}}
               
     div.row
       div.col-sm-6.col-sm-offset-3
-        div(role='tabpanel')
-          ul#tabs.nav.nav-tabs(role='tablist')
-            li.active(role='presentation')
-              a(href='#messages', aria-controls='messages', role='tab', data-toggle='tab') Messages
-            li(role='presentation')
-              a(href='#change-name', aria-controls='change-name', role='tab', data-toggle='tab') Change Name
-          .tab-content
-            #messages.tab-pane.active(role='tabpanel')
-              div
-                h3 Messages
-                .overflowable
-                  p(ng-repeat='message in messages'){{message.user}} says: {{message.text}}
-            #change-name.tab-pane(role='tabpanel')
-              div
-                h3 Change your name
-                form(role='form'
-                      ng-submit='changeName()')
-                  .form-group
-                    input#new-name.form-control(type='text'
-                                      placeholder='new name'
-                                      ng-model='newName')
-                    input.btn.btn-default(type='submit'
-                                          value='Change name')
-
-            
-            
+        div
+          h3 Messages
+          .overflowable
+            p(ng-repeat='message in messages'){{message.user}} says: {{message.text}}            
 
   script(src='/socket.io/socket.io.js')
   script(src='bower_components/angular/angular.js')
