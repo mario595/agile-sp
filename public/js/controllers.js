@@ -98,8 +98,10 @@ function AppCtrl($scope, socket) {
   var changeName = function (id, newName) {
     // rename user in list of users
     var i;
+    var oldName;
     for (i = 0; i < $scope.users.length; i++) {
       if ($scope.users[i].id === id) {
+        oldName = $scope.users[i].name;
         $scope.users[i].name = newName;
       }
     }
@@ -116,9 +118,10 @@ function AppCtrl($scope, socket) {
   $scope.stories = [];
   $scope.selectedStory;
   $scope.currentUserId = -1;
-  $scope.valueOptions = [0,1,2,3,5,8,13,20]
-  $scope.alerts = []
-  $scope.users = []
+  $scope.valueOptions = [0,1,2,3,5,8,13,20];
+  $scope.alerts = [];
+  $scope.users = [];
+  $scope.currentPoll = 1;
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -177,6 +180,7 @@ function AppCtrl($scope, socket) {
       }, function (success) {
         if(success) {
           $scope.selectedStory.polls.push({results: []});
+          $scope.currentPoll = $scope.selectedStory.polls.length;
           $scope.selectedStory['open'] = true;  
         }
       });

@@ -24,9 +24,15 @@ block body
           div.panel-body
             div(ng-show='selectedStory')
               h4 {{selectedStory.name}}
-              ul
-                ul(ng-repeat='poll in selectedStory.polls track by $index') {{$index}}
-                  ul(ng-repeat='result in poll.results') {{result}}
+              div(ng-show='selectedStory.polls.length > 0')
+                pagination(direction-links='false'
+                          total-items='selectedStory.polls.length'
+                          ng-model='currentPoll'
+                          items-per-page='1')
+                ul
+                  li(ng-repeat='vote in selectedStory.polls[currentPoll-1].results') {{vote}}
+
+
               div(ng-show='currentUser().isAdmin')
                 button(type='button'
                         id='open-story-button',
