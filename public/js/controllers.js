@@ -162,6 +162,7 @@ function AppCtrl($scope, socket) {
         $scope.stories.push(newStory);
     });
     $scope.newStoryName = '';
+    $scope.addNewStory = false;
   };
 
   $scope.selectStory = function(story) {
