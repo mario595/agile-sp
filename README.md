@@ -9,7 +9,7 @@ Once the Scrum Master has created a story, it will automatically appear on the o
 After that, the Scrum Master can close the story. From that point, users won't be able to change their vote. All the users' votes will be collected and shown to all the users. Then, the Scrum Master can open the story again, and repeat the process.
 
 ##Installation
-For installation, just clone the repository and run `npm install` to fetch the dependencies. Then just run `node app.js`.
+Make sure you have installed NodeJS and Bower. For installation, just clone the repository and run `npm install` and then `bower install` to fetch the dependencies. Then just run `node app.js`.
 
 ##Future Improvements
 There are some improvements in progress at the moment, here is some of them:
