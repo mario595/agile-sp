@@ -2,11 +2,17 @@ var rooms = (function(){
 	var crypto = require('crypto');
 	var rooms = [];
 	var index = 0;
-	var User = function(isAdmin){
+	var User = function(isAdmin) {
 		this.id = getRandomKey();
 		this.name = 'Guest_'+this.id;
 		this.isAdmin = isAdmin || false;
 	};
+
+	var Story = function(name) {
+		this.id = getRandomKey();
+		this.name = name;
+		this.polls = [];
+	}
 
 	function getRandomKey() {
 		return crypto.randomBytes(4).toString('hex').toUpperCase();
@@ -15,10 +21,17 @@ var rooms = (function(){
 		this.id = getRandomKey();
 		this.users = [];
 		this.stories = [];
+
 		this.createUser = function() {
 			var user = new User(this.users.length==0);
 			this.users.push(user);
 			return user;
+		};
+
+		this.createStory = function(name) {
+			var story = new Story(name);
+			this.stories.push(story);
+			return story;
 		};
 	};
 

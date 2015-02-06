@@ -42,7 +42,7 @@ var users = (function() {
 }());
 
 
-//Stories
+//TODO REMOVE THIS: Stories
 var stories = (function() {
   var stories = [];
   var lastIndex = 0;
@@ -90,6 +90,7 @@ module.exports = function (socket) {
     var room = rooms.get_room(board_id);
     if (room) {
       socket.join(board_id);
+      socket.board_id = board_id;
       // var user = users.getNewUser();
       var user = room.createUser();
       fn({
@@ -108,9 +109,12 @@ module.exports = function (socket) {
 
   //Story creation
   socket.on('create:story', function (data, fn){
-    var story = stories.create(data.name);
+    //var story = stories.create(data.name);
+    var room = rooms.get_room(socket.board_id);
+    var story = room.createStory(data.name);
+
     //Notify all that a new story has been created
-    socket.broadcast.emit('create:story', story);
+    socket.broadcast.to(socket.board_id).emit('create:story', story);
     fn(story);
   });
 
