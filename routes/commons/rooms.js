@@ -14,8 +14,13 @@ var rooms = (function(){
 		this.polls = [];
 
 		this.open = function() {
-			this.polls.push({});
+			this.polls.push({results: []});
 		}
+
+		this.vote = function(vote) {
+			lastPollIndex = this.polls.length - 1;
+			this.polls[lastPollIndex].results.push(vote);
+		};
 	}
 
 	function getRandomKey() {

@@ -121,7 +121,7 @@ module.exports = function (socket) {
     var room = rooms.get_room(socket.board_id);
     room.openStory(data.id);
     //Notify that the story has been opened
-    socket.broadcast.emit('open:story', {
+    socket.broadcast.to(socket.board_id).emit('open:story', {
       id:data.id
     });
     fn(true);
@@ -133,23 +133,20 @@ module.exports = function (socket) {
     var room = rooms.get_room(socket.board_id);
     room.closeStory(data.storyId);
     //Notify that the story has been closed
-    socket.broadcast.emit('close:story');
+    socket.broadcast.to(socket.board_id).emit('close:story');
   });
 
   //Story vote
   socket.on('vote:story', function(data){
-      var result = stories.get().filter(function(obj){
-        return obj.id==data.storyId;
-      });
-      if (result.length > 0) {
-        var story = result[0];
-        var lastPollIndex = story.polls.length - 1;
-        story.polls[lastPollIndex].results.push(data.vote);
-        socket.broadcast.emit('vote:story', {
-          storyId: data.storyId,
-          vote: data.vote
-        });
-      }
+    var room = rooms.get_room(socket.board_id);
+    var story = room.getStory(data.storyId);
+    story.vote(data.vote);
+    //Notify others clients.
+    socket.broadcast.to(socket.board_id).emit('vote:story', {
+      storyId: data.storyId,
+      vote: data.vote
+    });
+  
   });
 
   // broadcast a user's message to other users
