@@ -151,7 +151,8 @@ function AppCtrl($scope, socket, info) {
     }
     //Notify server name change
     socket.emit('change:name', {
-      name: $scope.newName
+      name: $scope.newName,
+      userId: $scope.currentUserId
     }, function (result) {
       if (!result) {
         alert('There was an error changing your name');

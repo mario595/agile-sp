@@ -38,6 +38,15 @@ var rooms = (function(){
 			return user;
 		};
 
+		this.changeUserName = function(userId, newName) {
+			var result = this.users.filter(function(obj) {
+				return obj.id = userId;
+			});
+			if (result.length > 0) {
+				result[0].name = newName;
+			}
+		};
+
 		this.createStory = function(name) {
 			var story = new Story(name);
 			this.stories.push(story);

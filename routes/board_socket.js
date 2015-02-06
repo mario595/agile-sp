@@ -151,7 +151,7 @@ module.exports = function (socket) {
 
   // broadcast a user's message to other users
   socket.on('send:message', function (data) {
-    socket.broadcast.emit('send:message', {
+    socket.broadcast.to(socket.board_id).emit('send:message', {
       user: user.name,
       text: data.message
     });
@@ -159,12 +159,13 @@ module.exports = function (socket) {
 
   // validate a user's name change, and broadcast it on success
   socket.on('change:name', function (data, fn) {
-    user.name = data.name;
-    socket.broadcast.emit('change:name', {
-      id: user.id,
-      newName: user.name
-      });
+    var room = rooms.get_room(socket.board_id);
+    room.changeUserName(data.userId, data.name);
 
+    socket.broadcast.to(socket.board_id).emit('change:name', {
+      id: data.userId,
+      newName: data.name
+      });
 
     fn(true);
   });
