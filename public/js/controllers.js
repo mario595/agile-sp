@@ -10,7 +10,7 @@ function AppCtrl($scope, socket, info) {
                 {board_id:$scope.boardId},
                 function(data) {
                   $scope.currentUserId = data.user.id;
-                  $scope.users = data.users;
+                  $scope.users = data.room.users,
                   $scope.stories = data.stories;
                 });
   });

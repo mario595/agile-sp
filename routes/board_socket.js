@@ -95,7 +95,6 @@ module.exports = function (socket) {
       fn({
         user: user,
         room: room,
-        users: room.users,
         //TODO!!
         stories: []
       });
