@@ -12,6 +12,10 @@ var rooms = (function(){
 		this.id = getRandomKey();
 		this.name = name;
 		this.polls = [];
+
+		this.open = function() {
+			this.polls.push({});
+		}
 	}
 
 	function getRandomKey() {
@@ -21,9 +25,10 @@ var rooms = (function(){
 		this.id = getRandomKey();
 		this.users = [];
 		this.stories = [];
+		this.openedStoriesIds = [];
 
 		this.createUser = function() {
-			var user = new User(this.users.length==0);
+			var user = new User(this.users.length == 0);
 			this.users.push(user);
 			return user;
 		};
@@ -33,6 +38,25 @@ var rooms = (function(){
 			this.stories.push(story);
 			return story;
 		};
+
+		this.getStory = function(id) {
+			var result = this.stories.filter(function(obj) {
+				return obj.id == id;
+			});
+
+			if (result.length > 0) {
+				return result[0];
+			}
+		};
+
+		this.openStory = function(story_id) {
+			if (this.openedStoriesIds.indexOf(story_id) == -1) {
+				this.openedStoriesIds.push(story_id);
+				this.getStory(story_id).open();
+			}
+		};
+
+		
 	};
 
 	var getAll = function() {

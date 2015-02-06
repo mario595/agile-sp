@@ -102,17 +102,15 @@ module.exports = function (socket) {
         user: user
       });
     } else {
-      //TODO: Board doesn't exists
+      //TODO: Board doesn't exists error.
       console.log("Board doesn't exist: "+board_id);
     }
   });
 
   //Story creation
   socket.on('create:story', function (data, fn){
-    //var story = stories.create(data.name);
     var room = rooms.get_room(socket.board_id);
     var story = room.createStory(data.name);
-
     //Notify all that a new story has been created
     socket.broadcast.to(socket.board_id).emit('create:story', story);
     fn(story);
@@ -120,7 +118,8 @@ module.exports = function (socket) {
 
   //Story Open
   socket.on('open:story', function (data, fn){
-    stories.open(data.id);
+    var room = rooms.get_room(socket.board_id);
+    room.openStory(data.id);
     //Notify that the story has been opened
     socket.broadcast.emit('open:story', {
       id:data.id
