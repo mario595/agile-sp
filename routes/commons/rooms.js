@@ -56,6 +56,16 @@ var rooms = (function(){
 			}
 		};
 
+		this.closeStory = function(story_id) {
+			var index = this.openedStoriesIds.indexOf(story_id);
+			index = (index == -1 && this.openedStoriesIds.length > 0) ?
+					index = 0 :
+					-1;
+			if (index > -1) {
+				this.openedStoriesIds.slice(index, 1);
+			}
+		};
+
 		
 	};
 

@@ -129,7 +129,9 @@ module.exports = function (socket) {
 
   //Story Close
   socket.on('close:story', function(data){
-    stories.close();
+    // stories.close();
+    var room = rooms.get_room(socket.board_id);
+    room.closeStory(data.storyId);
     //Notify that the story has been closed
     socket.broadcast.emit('close:story');
   });
