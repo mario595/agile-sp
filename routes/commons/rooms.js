@@ -11,7 +11,6 @@ var rooms = (function(){
 	function getRandomKey() {
 		return crypto.randomBytes(4).toString('hex').toUpperCase();
 	}
-
 	var Room = function() {
 		this.id = getRandomKey();
 		this.users = [];
@@ -20,11 +19,6 @@ var rooms = (function(){
 			this.users.push(user);
 			return user;
 		};
-
-		this.getAllUsers = function() {
-			return this.users;
-		};
-
 	};
 
 	var getAll = function() {

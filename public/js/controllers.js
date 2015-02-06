@@ -17,7 +17,7 @@ function AppCtrl($scope, socket, info) {
 
   socket.on('init', function (data) {
     $scope.currentUserId = data.user.id;
-    $scope.users = data.users;
+    $scope.users = data.room.users;
     $scope.stories = data.stories;
   });
 
@@ -248,15 +248,15 @@ function startCtrl($scope, $window, socket){
   //Initialize Socket
   socket.connect('/home');
   $scope.rooms = [];
-  //Get list of all rooms created
+  //TO BE REMOVED: Get list of all rooms created
   socket.on('init', function (data) {
     $scope.rooms = data.rooms;
   });
 
   $scope.createBoard = function() {
-    socket.emit('create:room', {}, function(data){
-      $scope.rooms.push(data);
-      $window.location.href = '/board/'+data.id;
+    socket.emit('create:room', {}, function(room){
+      $scope.rooms.push(room);
+      $window.location.href = '/board/'+room.id;
     });
   };
 }

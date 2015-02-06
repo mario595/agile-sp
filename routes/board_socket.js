@@ -84,19 +84,6 @@ var stories = (function() {
 var rooms = require('./commons/rooms');
 // export function for listening to the socket
 module.exports = function (socket) {
-  // var user = users.getNewUser();
-
-  // // send the new user their name and a list of users and stories
-  // socket.emit('init', {
-  //   user: user,
-  //   users: users.getAll(),
-  //   stories: stories.get()
-  // });
-
-  // // notify other clients that a new user has joined
-  // socket.broadcast.emit('user:join', {
-  //   user: user
-  // });
 
   socket.on('user:join', function(data, fn){
     var board_id = data.board_id;
@@ -107,7 +94,8 @@ module.exports = function (socket) {
       var user = room.createUser();
       fn({
         user: user,
-        users: room.getAllUsers(),
+        room: room,
+        users: room.users,
         //TODO!!
         stories: []
       });
