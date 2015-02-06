@@ -81,7 +81,7 @@ var stories = (function() {
     close: close
   };
 }());
-
+var rooms = require('./commons/rooms');
 // export function for listening to the socket
 module.exports = function (socket) {
   // var user = users.getNewUser();
@@ -100,19 +100,25 @@ module.exports = function (socket) {
 
   socket.on('user:join', function(data, fn){
     var board_id = data.board_id;
-    //TODO: Check if board has been created
-
-    socket.join(board_id);
-    var user = users.getNewUser();
-    fn({
-      user: user,
-      users: users.getAll(),
-      stories: stories.get()
-    });
-    // notify other clients that a new user has joined
-    socket.broadcast.emit('user:join', {
-      user: user
-    });
+    var room = rooms.get_room(board_id);
+    if (room) {
+      socket.join(board_id);
+      // var user = users.getNewUser();
+      var user = room.createUser();
+      fn({
+        user: user,
+        users: room.getAllUsers(),
+        //TODO!!
+        stories: []
+      });
+      // notify other clients that a new user has joined
+      socket.broadcast.to(board_id).emit('user:join', {
+        user: user
+      });
+    } else {
+      //TODO: Board doesn't exists
+      console.log("Board doesn't exist: "+board_id);
+    }
   });
 
   //Story creation
