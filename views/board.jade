@@ -1,0 +1,110 @@
+extends layout
+
+block body
+  div.container(ng-controller='AppCtrl')
+    alert(ng-repeat="alert in alerts"
+          type="{{alert.type}}"
+          close="closeAlert($index)") {{alert.msg}}
+    div.row
+      div.col-sm-3
+        div.panel.panel-default
+          div.panel-heading
+            h3 Stories
+          ul.nav.nav-pills.nav-stacked(ng-repeat='story in stories')
+            li(role='presentation'
+               ng-class='{active: story.id == selectedStory.id}')
+              a(ng-click='selectStory(story)') {{story.name}}
+          ul.nav.nav-pills.nav-stacked(ng-show='currentUser().isAdmin')
+            li(ng-hide='addNewStory')
+              a(ng-click='addNewStory=true') <span class="glyphicon glyphicon glyphicon-plus" aria-hidden="true"></span> Add Story
+            li(ng-show='addNewStory')
+              form(role='form'
+                   ng-submit='createStory()')
+                .form-group
+                  input#new-story-name.form-control(type='text'
+                                                    placeholder='Add Story'
+                                                    ng-model='newStoryName')
+                  input.btn.btn-success(type='submit',
+                                        value='Create Story')
+                  input.btn.btn-danger(type='button',
+                                      value='Cancel'
+                                      ng-click='addNewStory=false')
+      div.col-sm-6
+        div.panel.panel-default
+          div.panel-heading
+            h3 Current Story
+          div.panel-body
+            div(ng-show='selectedStory')
+              h4 {{selectedStory.name}}
+              div(ng-show='selectedStory.polls.length > 0')
+                pagination(direction-links='false'
+                          total-items='selectedStory.polls.length'
+                          ng-model='currentPoll'
+                          items-per-page='1')
+                ul
+                  li(ng-repeat='vote in selectedStory.polls[currentPoll-1].results') {{vote}}
+
+
+              div(ng-show='currentUser().isAdmin')
+                button(type='button'
+                        id='open-story-button',
+                        class='btn btn-success',
+                        ng-click='openStory()'
+                        ng-show='!selectedStory.open') Open
+                button(type='button'
+                        id='open-story-button',
+                        class='btn btn-danger',
+                        ng-click='closeStory()'
+                        ng-show='selectedStory.open') Close
+              div(ng-show='selectedStory.open')
+                h4 Vote!
+                p {{myVote ? "Your vote is "+myVote : "Cast your vote"}}
+                .btn-group
+                  label.btn.btn-success(  ng-repeat='option in valueOptions'
+                                          ng-model='$parent.myVote'
+                                          btn-radio="'{{option}}'"
+                                          uncheckable) {{option}}
+      div.col-sm-3
+        div.panel.panel-default
+          div.panel-heading
+            h3 Users
+          div.panel-body
+            p
+            | Your name is 
+            a(ng-click='showChangeNameForm=true') {{currentUser().name}}
+            form(role='form'
+                ng-submit='changeName()'
+                ng-show='showChangeNameForm')
+              .form-group
+                input#new-name.form-control(type='text'
+                                  placeholder='new name'
+                                  ng-model='newName')
+                input.btn.btn-success(type='submit'
+                                      value='Change name')
+                input.btn.btn-danger(type='button'
+                                    value='Cancel'
+                                    ng-click='showChangeNameForm=false')
+            .overflowable
+              p(ng-repeat='user in users'
+                        ng-class='{strong: user.isAdmin}'){{user.name}}
+              
+    div.row
+      div.col-sm-6.col-sm-offset-3
+        div
+          h3 Messages
+          .overflowable
+            p(ng-repeat='message in messages'){{message.user}} says: {{message.text}}            
+
+  script(src='/socket.io/socket.io.js')
+  script(src='bower_components/angular/angular.js')
+  script(src='bower_components/angular-route/angular-route.js')
+  script(src='bower_components/angular-socket-io/socket.js')
+  script(src='js/app.js')
+  script(src='js/services.js')
+  script(src='js/controllers.js')
+  script(src='bower_components/jquery/dist/jquery.min.js')
+  script(src='bower_components/bootstrap/dist/js/bootstrap.min.js')
+  script(src='bower_components/angular-bootstrap/ui-bootstrap.min.js')
+  script(src='bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js')
+  script.
+    app.value('info', { boardId: '#{board_id}' });

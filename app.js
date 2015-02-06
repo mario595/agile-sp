@@ -44,11 +44,17 @@ if (app.get('env') === 'production') {
 // serve index and view partials
 app.get('/', routes.index);
 
+app.get('/board/:board_id([A-F0-9]{8})', routes.board);
+
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);
 
 // Socket.io Communication
-io.sockets.on('connection', require('./routes/socket'));
+var board_nsp = io.of('/board');
+board_nsp.on('connection', require('./routes/board_socket'));
+
+var home_nsp = io.of('/home');
+home_nsp.on('connection', require('./routes/home_socket'));
 
 /**
  * Start Server

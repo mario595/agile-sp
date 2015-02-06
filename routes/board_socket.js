@@ -84,18 +84,35 @@ var stories = (function() {
 
 // export function for listening to the socket
 module.exports = function (socket) {
-  var user = users.getNewUser();
+  // var user = users.getNewUser();
 
-  // send the new user their name and a list of users and stories
-  socket.emit('init', {
-    user: user,
-    users: users.getAll(),
-    stories: stories.get()
-  });
+  // // send the new user their name and a list of users and stories
+  // socket.emit('init', {
+  //   user: user,
+  //   users: users.getAll(),
+  //   stories: stories.get()
+  // });
 
-  // notify other clients that a new user has joined
-  socket.broadcast.emit('user:join', {
-    user: user
+  // // notify other clients that a new user has joined
+  // socket.broadcast.emit('user:join', {
+  //   user: user
+  // });
+
+  socket.on('user:join', function(data, fn){
+    var board_id = data.board_id;
+    //TODO: Check if board has been created
+
+    socket.join(board_id);
+    var user = users.getNewUser();
+    fn({
+      user: user,
+      users: users.getAll(),
+      stories: stories.get()
+    });
+    // notify other clients that a new user has joined
+    socket.broadcast.emit('user:join', {
+      user: user
+    });
   });
 
   //Story creation

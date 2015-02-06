@@ -1,7 +1,19 @@
-function AppCtrl($scope, socket) {
+function AppCtrl($scope, socket, info) {
+  //Initialize Socket
+  socket.connect('/board');
 
   // Socket listeners
   // ================
+
+  socket.on('connect', function() {
+    socket.emit('user:join', 
+                {board_id:$scope.boardId},
+                function(data) {
+                  $scope.currentUserId = data.user.id;
+                  $scope.users = data.users;
+                  $scope.stories = data.stories;
+                });
+  });
 
   socket.on('init', function (data) {
     $scope.currentUserId = data.user.id;
@@ -111,7 +123,7 @@ function AppCtrl($scope, socket) {
     });
   }
 
-// Methods published to the scope
+  // Methods published to the scope
   // ==============================
   //Initialize scope
   $scope.messages = [];
@@ -122,6 +134,8 @@ function AppCtrl($scope, socket) {
   $scope.alerts = [];
   $scope.users = [];
   $scope.currentPoll = 1;
+  $scope.boardId=info.boardId;
+
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -227,5 +241,22 @@ function AppCtrl($scope, socket) {
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
   };
+}
 
+//Controller for the landing page
+function startCtrl($scope, $window, socket){
+  //Initialize Socket
+  socket.connect('/home');
+  $scope.rooms = [];
+  //Get list of all rooms created
+  socket.on('init', function (data) {
+    $scope.rooms = data.rooms;
+  });
+
+  $scope.createBoard = function() {
+    socket.emit('create:room', {}, function(data){
+      $scope.rooms.push(data);
+      $window.location.href = '/board/'+data.id;
+    });
+  };
 }
