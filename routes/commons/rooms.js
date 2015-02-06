@@ -14,6 +14,7 @@ var rooms = (function(){
 	var Room = function() {
 		this.id = getRandomKey();
 		this.users = [];
+		this.stories = [];
 		this.createUser = function() {
 			var user = new User(this.users.length==0);
 			this.users.push(user);

@@ -94,9 +94,7 @@ module.exports = function (socket) {
       var user = room.createUser();
       fn({
         user: user,
-        room: room,
-        //TODO!!
-        stories: []
+        room: room
       });
       // notify other clients that a new user has joined
       socket.broadcast.to(board_id).emit('user:join', {

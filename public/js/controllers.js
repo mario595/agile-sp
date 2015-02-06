@@ -11,7 +11,7 @@ function AppCtrl($scope, socket, info) {
                 function(data) {
                   $scope.currentUserId = data.user.id;
                   $scope.users = data.room.users,
-                  $scope.stories = data.stories;
+                  $scope.stories = data.room.stories;
                 });
   });
 
