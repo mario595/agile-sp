@@ -20,7 +20,7 @@ var rooms = (function(){
 			lastPollIndex = this.polls.length - 1;
 			this.polls[lastPollIndex].results.push(vote);
 		};
-	}
+	};
 
 	function getRandomKey() {
 		return crypto.randomBytes(4).toString('hex').toUpperCase();

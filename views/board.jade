@@ -43,7 +43,7 @@ block body
                           ng-model='currentPoll'
                           items-per-page='1')
                 ul
-                  li(ng-repeat='vote in selectedStory.polls[currentPoll-1].results') {{vote}}
+                  li(ng-repeat='vote in selectedStory.polls[currentPoll-1].results track by $index') {{vote}}
 
 
               div(ng-show='currentUser().isAdmin')
