@@ -14,7 +14,7 @@ var rooms = (function(){
 
 		this.open = function() {
 			this.polls.push({results: []});
-		}
+		};
 
 		this.vote = function(vote) {
 			lastPollIndex = this.polls.length - 1;
@@ -118,7 +118,7 @@ var rooms = (function(){
 		if (result.length>0) {
 			return result[0];
 		}
-	}
+	};
 
 	return {
 		getAll: getAll,
