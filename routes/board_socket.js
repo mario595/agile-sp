@@ -1,3 +1,4 @@
+//TODO REMOVE THIS: users
 var users = (function() {
   var users = [];
   var nextId = 0;
@@ -85,6 +86,8 @@ var rooms = require('./commons/rooms');
 // export function for listening to the socket
 module.exports = function (socket) {
 
+  var user;
+
   socket.on('user:join', function(data, fn){
     var board_id = data.board_id;
     var room = rooms.get_room(board_id);
@@ -92,7 +95,7 @@ module.exports = function (socket) {
       socket.join(board_id);
       socket.board_id = board_id;
       // var user = users.getNewUser();
-      var user = room.createUser();
+      user = room.createUser();
       fn({
         user: user,
         room: room
@@ -172,7 +175,8 @@ module.exports = function (socket) {
 
   // clean up when a user leaves, and broadcast it to other users
   socket.on('disconnect', function () {
-    var newAdminId = users.free(user.id);
+    var room = rooms.get_room(socket.board_id);
+    var newAdminId = room.removeUser(user.id);
     socket.broadcast.emit('user:left', {
       id: user.id,
       newAdminId: newAdminId

@@ -49,7 +49,7 @@ function AppCtrl($scope, socket, info) {
       }
     }
     //check if we have a new admin
-    if (data.newAdminId > -1) {
+    if (data.newAdminId) {
       var result = $scope.users.filter(function(obj){
         return obj.id == data.newAdminId;
       });

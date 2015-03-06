@@ -1,7 +1,6 @@
 var rooms = (function(){
 	var crypto = require('crypto');
 	var rooms = [];
-	var index = 0;
 	var User = function(isAdmin) {
 		this.id = getRandomKey();
 		this.name = 'Guest_'+this.id;
@@ -36,6 +35,25 @@ var rooms = (function(){
 			var user = new User(this.users.length == 0);
 			this.users.push(user);
 			return user;
+		};
+
+		this.removeUser = function(id) {
+			var newAdminId;
+		    for (var i = this.users.length - 1; i >= 0; i--) {
+		      if (this.users[i].id==id) {
+		        //check if we need a new admin
+		        newAdmin = this.users[i].isAdmin && this.users.length > 1;
+		        //remove
+		        this.users.splice(i, 1);
+		        //make new admin to the new first user
+		        if (newAdmin) {
+		          this.users[0].isAdmin = true;
+		          newAdminId = this.users[0].id;
+		        }
+		        break;
+		      }
+		    }
+		    return newAdminId;
 		};
 
 		this.changeUserName = function(userId, newName) {
