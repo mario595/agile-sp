@@ -113,7 +113,7 @@ var rooms = (function(){
 
 	var get = function(room_id) {
 		var result = rooms.filter(function(obj){
-			return obj.id == room_id;
+			return obj.id.toUpperCase() == room_id.toUpperCase();
 		});
 		if (result.length>0) {
 			return result[0];

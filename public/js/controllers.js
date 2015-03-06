@@ -254,4 +254,15 @@ function startCtrl($scope, $window, socket){
       $window.location.href = '/board/'+room.id;
     });
   };
+
+  $scope.joinBoard = function() {
+      var boardIdMatches = $scope.boardId.match(/[0-9a-f]{8}/i);
+      if(boardIdMatches.length>0) {
+        $window.location.href = '/board/'+boardIdMatches[0];
+      } else {
+        //TODO: show error.
+      }
+
+      
+    };
 }

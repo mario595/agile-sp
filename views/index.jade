@@ -20,12 +20,14 @@ block body
 					div.panel.panel-default
 						div.panel-body
 							h4 Join an existing Board
-							form(role='form')
+							form(role='form'
+								ng-submit='joinBoard()')
 								.form-group
 									input#board-id.form-control(type='text'
-																placeholder='Board Id')
+																placeholder='Board Id'
+																ng-model='boardId')
 									input.btn.btn-success(type='submit',
-	                                    value='Join')
+	                                    					value='Join')
 
 	script(src='/socket.io/socket.io.js')
 
