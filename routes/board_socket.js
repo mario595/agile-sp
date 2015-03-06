@@ -10,7 +10,6 @@ module.exports = function (socket) {
     if (room) {
       socket.join(board_id);
       socket.board_id = board_id;
-      // var user = users.getNewUser();
       user = room.createUser();
       fn({
         user: user,
@@ -21,8 +20,8 @@ module.exports = function (socket) {
         user: user
       });
     } else {
-      //TODO: Board doesn't exists error.
       console.log("Board doesn't exist: "+board_id);
+      fn({});
     }
   });
 
@@ -91,11 +90,13 @@ module.exports = function (socket) {
 
   // clean up when a user leaves, and broadcast it to other users
   socket.on('disconnect', function () {
-    var room = rooms.get_room(socket.board_id);
-    var newAdminId = room.removeUser(user.id);
-    socket.broadcast.emit('user:left', {
-      id: user.id,
-      newAdminId: newAdminId
+    if(user && socket.board_id) {
+      var room = rooms.get_room(socket.board_id);
+      var newAdminId = room.removeUser(user.id);
+      socket.broadcast.emit('user:left', {
+        id: user.id,
+        newAdminId: newAdminId
     });
+    }
   });
 };

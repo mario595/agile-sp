@@ -44,7 +44,7 @@ if (app.get('env') === 'production') {
 // serve index and view partials
 app.get('/', routes.index);
 
-app.get('/board/:board_id([A-F0-9]{8})', routes.board);
+app.get('/board/:board_id([A-Fa-f0-9]{8})', routes.board);
 
 // redirect all others to the index (HTML5 history)
 app.get('*', routes.index);

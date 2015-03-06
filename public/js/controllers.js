@@ -1,4 +1,4 @@
-function AppCtrl($scope, socket, info) {
+function AppCtrl($scope, $window, socket, info) {
   //Initialize Socket
   socket.connect('/board');
 
@@ -9,9 +9,14 @@ function AppCtrl($scope, socket, info) {
     socket.emit('user:join', 
                 {board_id:$scope.boardId},
                 function(data) {
-                  $scope.currentUserId = data.user.id;
-                  $scope.users = data.room.users,
-                  $scope.stories = data.room.stories;
+                  if(data.user && data.room) {
+                    $scope.currentUserId = data.user.id;
+                    $scope.users = data.room.users;
+                    $scope.stories = data.room.stories;
+                  } else {
+                    
+                    $window.location.href = '/';
+                  }
                 });
   });
 
