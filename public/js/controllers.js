@@ -1,11 +1,28 @@
-function AppCtrl($scope, socket) {
+function AppCtrl($scope, $window, socket, info) {
+  //Initialize Socket
+  socket.connect('/board');
 
   // Socket listeners
   // ================
 
+  socket.on('connect', function() {
+    socket.emit('user:join', 
+                {board_id:$scope.boardId},
+                function(data) {
+                  if(data.user && data.room) {
+                    $scope.currentUserId = data.user.id;
+                    $scope.users = data.room.users;
+                    $scope.stories = data.room.stories;
+                  } else {
+                    
+                    $window.location.href = '/';
+                  }
+                });
+  });
+
   socket.on('init', function (data) {
     $scope.currentUserId = data.user.id;
-    $scope.users = data.users;
+    $scope.users = data.room.users;
     $scope.stories = data.stories;
   });
 
@@ -37,7 +54,7 @@ function AppCtrl($scope, socket) {
       }
     }
     //check if we have a new admin
-    if (data.newAdminId > -1) {
+    if (data.newAdminId) {
       var result = $scope.users.filter(function(obj){
         return obj.id == data.newAdminId;
       });
@@ -111,7 +128,7 @@ function AppCtrl($scope, socket) {
     });
   }
 
-// Methods published to the scope
+  // Methods published to the scope
   // ==============================
   //Initialize scope
   $scope.messages = [];
@@ -122,6 +139,8 @@ function AppCtrl($scope, socket) {
   $scope.alerts = [];
   $scope.users = [];
   $scope.currentPoll = 1;
+  $scope.boardId=info.boardId;
+
 
   $scope.showNewStoryTab = function () {
     $('#tabs a[href="#create-story"]').tab('show');
@@ -137,7 +156,8 @@ function AppCtrl($scope, socket) {
     }
     //Notify server name change
     socket.emit('change:name', {
-      name: $scope.newName
+      name: $scope.newName,
+      userId: $scope.currentUserId
     }, function (result) {
       if (!result) {
         alert('There was an error changing your name');
@@ -227,5 +247,27 @@ function AppCtrl($scope, socket) {
   $scope.closeAlert = function(index) {
     $scope.alerts.splice(index, 1);
   };
+}
 
+//Controller for the landing page
+function startCtrl($scope, $window, socket){
+  //Initialize Socket
+  socket.connect('/home');
+
+  $scope.createBoard = function() {
+    socket.emit('create:room', {}, function(room){
+      $window.location.href = '/board/'+room.id;
+    });
+  };
+
+  $scope.joinBoard = function() {
+      var boardIdMatches = $scope.boardId.match(/[0-9a-f]{8}/i);
+      if(boardIdMatches.length>0) {
+        $window.location.href = '/board/'+boardIdMatches[0];
+      } else {
+        //TODO: show error.
+      }
+
+      
+    };
 }
