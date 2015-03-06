@@ -25,7 +25,8 @@ block body
                                                     placeholder='Add Story'
                                                     ng-model='newStoryName')
                   input.btn.btn-success(type='submit',
-                                        value='Create Story')
+                                        value='Create Story'
+                                        ng-hide='!newStoryName.length')
                   input.btn.btn-danger(type='button',
                                       value='Cancel'
                                       ng-click='addNewStory=false')
@@ -80,7 +81,8 @@ block body
                                   placeholder='new name'
                                   ng-model='newName')
                 input.btn.btn-success(type='submit'
-                                      value='Change name')
+                                      value='Change name'
+                                      ng-hide='!newName.length')
                 input.btn.btn-danger(type='button'
                                     value='Cancel'
                                     ng-click='showChangeNameForm=false')
